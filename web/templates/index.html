@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CasvuAI Content Generator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f5f7fa; color: #333; }
+
+    header {
+      background: #1a1a2e; color: white; padding: 20px 40px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    header h1 { font-size: 22px; font-weight: 600; }
+    header span { font-size: 13px; color: #aaa; }
+
+    .container { max-width: 860px; margin: 48px auto; padding: 0 24px; }
+
+    h2 { font-size: 26px; margin-bottom: 8px; }
+    .subtitle { color: #666; margin-bottom: 32px; font-size: 15px; }
+
+    .card {
+      background: white; border-radius: 12px;
+      padding: 32px; box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    .field { margin-bottom: 22px; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; }
+    label span { color: #888; font-weight: 400; }
+
+    input[type=text], textarea {
+      width: 100%; padding: 12px 14px; border: 1.5px solid #ddd;
+      border-radius: 8px; font-size: 14px; font-family: inherit;
+      transition: border 0.2s;
+    }
+    input[type=text]:focus, textarea:focus {
+      outline: none; border-color: #6c63ff;
+    }
+    textarea { resize: vertical; }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    button {
+      width: 100%; padding: 14px; background: #6c63ff; color: white;
+      border: none; border-radius: 8px; font-size: 16px; font-weight: 600;
+      cursor: pointer; transition: background 0.2s; margin-top: 8px;
+    }
+    button:hover { background: #574fd6; }
+
+    .error {
+      background: #fff0f0; border: 1px solid #ffcccc;
+      color: #c0392b; padding: 14px; border-radius: 8px; margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .tags { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+    .tag {
+      background: #f0eeff; color: #6c63ff; padding: 4px 12px;
+      border-radius: 20px; font-size: 12px; font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>CasvuAI Content Generator</h1>
+    <span>GEO-Optimized · Brand-Aligned · Multilingual</span>
+  </div>
+</header>
+
+<div class="container">
+  <h2>Generate Marketing Content</h2>
+  <p class="subtitle">Paste your company data, describe what you want to create, and get publication-ready content in English and Finnish.</p>
+
+  <div class="tags">
+    <span class="tag">GEO-Optimized</span>
+    <span class="tag">Brand-Aligned</span>
+    <span class="tag">EN + FI</span>
+    <span class="tag">AI-Powered</span>
+  </div>
+
+  <div class="card">
+    {% if error %}
+    <div class="error"><strong>Error:</strong> {{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="field">
+        <label>Client / Company Name</label>
+        <input type="text" name="client_id" placeholder="e.g. acme_hr" required>
+      </div>
+
+      <div class="field">
+        <label>Content Goal <span>— what do you want to create?</span></label>
+        <input type="text" name="goal"
+          placeholder="e.g. Launch a new AI onboarding service for Finnish SMEs" required>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Your Company Content <span>— paste website text, about page, blog posts</span></label>
+          <textarea name="client_content" rows="10"
+            placeholder="Paste your company's existing content here...&#10;&#10;The more you provide, the better the brand alignment."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Competitor Content <span>— optional, system infers if left blank</span></label>
+          <textarea name="competitor_content" rows="10"
+            placeholder="Paste competitor website text here (optional)...&#10;&#10;If left blank, the system will automatically infer the competitive landscape based on your goal and brand."></textarea>
+        </div>
+      </div>
+
+      <button type="submit" id="submit-btn" onclick="showLoading()">Generate Content</button>
+    </form>
+  </div>
+</div>
+
+<!-- Loading overlay -->
+<div id="loading" style="display:none; position:fixed; inset:0; background:rgba(26,26,46,0.92); z-index:999; flex-direction:column; align-items:center; justify-content:center; color:white;">
+  <div style="font-size:48px; margin-bottom:24px;">⚙️</div>
+  <div style="font-size:22px; font-weight:700; margin-bottom:12px;">Generating Content...</div>
+  <div style="font-size:14px; color:#aaa; margin-bottom:32px;">This takes about 60–90 seconds. Please wait.</div>
+  <div style="display:flex; flex-direction:column; gap:10px; width:320px;" id="steps">
+    <div class="step" id="s1">⏳ Analyzing brand voice...</div>
+    <div class="step" id="s2" style="color:#555">⏳ Researching competitors...</div>
+    <div class="step" id="s3" style="color:#555">⏳ Writing content...</div>
+    <div class="step" id="s4" style="color:#555">⏳ GEO optimization...</div>
+    <div class="step" id="s5" style="color:#555">⏳ Running 4 judges...</div>
+    <div class="step" id="s6" style="color:#555">⏳ Localizing to Finnish...</div>
+  </div>
+</div>
+
+<style>
+  .step { font-size: 14px; padding: 8px 16px; border-radius: 8px; transition: all 0.3s; }
+  .step.done { color: #2ecc71; }
+  .step.active { color: white; background: rgba(108,99,255,0.3); }
+</style>
+
+<script>
+function showLoading() {
+  document.getElementById('loading').style.display = 'flex';
+  const steps = ['s1','s2','s3','s4','s5','s6'];
+  const times = [0, 8000, 18000, 30000, 42000, 65000];
+  steps.forEach((id, i) => {
+    setTimeout(() => {
+      if (i > 0) {
+        document.getElementById(steps[i-1]).className = 'step done';
+        document.getElementById(steps[i-1]).innerHTML = '✅ ' + document.getElementById(steps[i-1]).innerHTML.slice(2);
+      }
+      document.getElementById(id).className = 'step active';
+      document.getElementById(id).style.color = '';
+    }, times[i]);
+  });
+}
+</script>
+
+</body>
+</html>

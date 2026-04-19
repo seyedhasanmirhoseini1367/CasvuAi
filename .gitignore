@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+data/chromadb/
+web/data/
+output/
+web/db.sqlite3
+db.sqlite3
+*.egg-info/
+.venv/
+venv/

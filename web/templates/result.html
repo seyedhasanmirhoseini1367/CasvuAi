@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Results — CasvuAI</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f5f7fa; color: #333; }
+
+    header {
+      background: #1a1a2e; color: white; padding: 20px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    header h1 { font-size: 20px; font-weight: 600; }
+    header a { color: #aaa; font-size: 13px; text-decoration: none; }
+    header a:hover { color: white; }
+
+    .container { max-width: 1100px; margin: 36px auto; padding: 0 24px; }
+    .back { display: inline-block; margin-bottom: 20px; color: #6c63ff; font-weight: 600; text-decoration: none; font-size: 14px; }
+
+    /* Overall banner */
+    .overall-banner {
+      border-radius: 12px; padding: 24px 32px; margin-bottom: 28px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .overall-banner.pass { background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; }
+    .overall-banner.fail { background: linear-gradient(135deg, #e67e22, #f39c12); color: white; }
+    .overall-banner .big { font-size: 48px; font-weight: 800; }
+    .overall-banner .label { font-size: 14px; opacity: 0.85; margin-top: 2px; }
+    .overall-banner .status { font-size: 22px; font-weight: 700; }
+    .overall-banner .status small { display: block; font-size: 13px; font-weight: 400; opacity: 0.85; margin-top: 4px; }
+
+    /* Judge grid */
+    .judges { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+
+    .judge-card {
+      background: white; border-radius: 12px; padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06); cursor: pointer;
+      border: 2px solid transparent; transition: border 0.2s;
+    }
+    .judge-card:hover { border-color: #6c63ff; }
+    .judge-card.active { border-color: #6c63ff; }
+
+    .judge-card .icon { font-size: 24px; margin-bottom: 8px; }
+    .judge-card .name { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #888; margin-bottom: 6px; }
+    .judge-card .score-num { font-size: 36px; font-weight: 800; }
+    .judge-card .score-num.green { color: #27ae60; }
+    .judge-card .score-num.orange { color: #e67e22; }
+    .judge-card .score-num.red { color: #e74c3c; }
+    .judge-card .bar-bg { background: #f0f0f0; border-radius: 4px; height: 6px; margin-top: 10px; }
+    .judge-card .bar-fill { height: 6px; border-radius: 4px; transition: width 0.5s; }
+    .judge-card .bar-fill.green { background: #27ae60; }
+    .judge-card .bar-fill.orange { background: #e67e22; }
+    .judge-card .bar-fill.red { background: #e74c3c; }
+
+    /* Judge detail panel */
+    .judge-detail { background: white; border-radius: 12px; padding: 28px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); margin-bottom: 28px; display: none; }
+    .judge-detail.active { display: block; }
+    .judge-detail h3 { font-size: 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+    .feedback-text { color: #444; line-height: 1.7; margin-bottom: 20px; font-size: 14px; }
+
+    .checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .checklist li { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+    .checklist li .dot { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .dot.pass { background: #d4f5e2; color: #27ae60; }
+    .dot.fail { background: #ffe8e8; color: #e74c3c; }
+
+    .tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin: 3px; }
+    .tag.red { background: #ffe8e8; color: #e74c3c; }
+    .tag.green { background: #d4f5e2; color: #27ae60; }
+    .tag.blue { background: #e8f0ff; color: #3b5bdb; }
+
+    /* Content tabs */
+    .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+    .tab { padding: 9px 22px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; border: 2px solid #ddd; background: white; transition: all 0.2s; }
+    .tab.active { background: #6c63ff; color: white; border-color: #6c63ff; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .content-card { background: white; border-radius: 12px; padding: 36px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+    .content-card .lang-label { font-size: 12px; font-weight: 700; color: #6c63ff; text-transform: uppercase; margin-bottom: 8px; }
+    .content-card h1 { font-size: 26px; margin-bottom: 24px; line-height: 1.35; }
+    .content-card h3 { font-size: 16px; margin: 22px 0 8px; color: #1a1a2e; }
+    .content-card p { line-height: 1.75; color: #444; margin-bottom: 10px; font-size: 15px; }
+    .content-card .cta { display: inline-block; margin-top: 24px; padding: 13px 26px; background: #6c63ff; color: white; border-radius: 8px; font-weight: 600; font-size: 15px; }
+
+    .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CasvuAI — Content Results</h1>
+  <a href="/">Generate New Content</a>
+</header>
+
+<div class="container">
+  <a href="/" class="back">← Back</a>
+
+  <!-- Content type badge -->
+  {% if content_type %}
+  <div style="margin-bottom:20px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+    <span style="background:#1a1a2e; color:white; padding:6px 16px; border-radius:20px; font-size:13px; font-weight:700;">
+      {{ content_type.primary_intent|upper }} content
+    </span>
+    <span style="color:#666; font-size:13px;">
+      Structure: <strong>{{ content_type.structure|join:" → " }}</strong>
+    </span>
+    <span style="background:#f0eeff; color:#6c63ff; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;">
+      GEO priority: {{ content_type.geo_priority|title }}
+    </span>
+  </div>
+  {% endif %}
+
+  <!-- Overall banner -->
+  <div class="overall-banner {% if passed %}pass{% else %}fail{% endif %}">
+    <div>
+      <div class="big">{{ overall_score }}<span style="font-size:24px">/100</span></div>
+      <div class="label">Overall Content Score</div>
+    </div>
+    <div style="text-align:right">
+      <div class="status">
+        {% if passed %}Quality Gate Passed{% else %}Needs Improvement{% endif %}
+        <small>Average of 4 independent judges</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 Judge cards -->
+  <div class="judges">
+
+    {% with s=customer_score %}
+    <div class="judge-card {% if s >= 70 %}{% else %}{% endif %}" onclick="showJudge('customer', this)">
+      <div class="icon">👤</div>
+      <div class="name">Customer Fit</div>
+      <div class="score-num {% if s >= 75 %}green{% elif s >= 50 %}orange{% else %}red{% endif %}">{{ s }}</div>
+      <div class="bar-bg"><div class="bar-fill {% if s >= 75 %}green{% elif s >= 50 %}orange{% else %}red{% endif %}" style="width:{{ s }}%"></div></div>
+    </div>
+    {% endwith %}
+
+    {% with s=geo_score %}
+    <div class="judge-card" onclick="showJudge('geo', this)">
+      <div class="icon">🤖</div>
+      <div class="name">GEO / AI Engine</div>
+      <div class="score-num {% if s >= 75 %}green{% elif s >= 50 %}orange{% else %}red{% endif %}">{{ s }}</div>
+      <div class="bar-bg"><div class="bar-fill {% if s >= 75 %}green{% elif s >= 50 %}orange{% else %}red{% endif %}" style="width:{{ s }}%"></div></div>
+    </div>
+    {% endwith %}
+
+    {% with s=competitor_score %}
+    <div class="judge-card" onclick="showJudge('competitor', this)">
+      <div class="icon">⚔️</div>
+      <div class="name">Competitor Edge</div>
+      <div class="score-num {% if s >= 75 %}green{% elif s >= 50 %}orange{% else %}red{% endif %}">{{ s }}</div>
+      <div class="bar-bg"><div class="bar-fill {% if s >= 75 %}green{% elif s >= 50 %}orange{% else %}red{% endif %}" style="width:{{ s }}%"></div></div>
+    </div>
+    {% endwith %}
+
+    {% with s=naturalness_score %}
+    <div class="judge-card" onclick="showJudge('naturalness', this)">
+      <div class="icon">✍️</div>
+      <div class="name">Human Naturalness</div>
+      <div class="score-num {% if s >= 75 %}green{% elif s >= 50 %}orange{% else %}red{% endif %}">{{ s }}</div>
+      <div class="bar-bg"><div class="bar-fill {% if s >= 75 %}green{% elif s >= 50 %}orange{% else %}red{% endif %}" style="width:{{ s }}%"></div></div>
+    </div>
+    {% endwith %}
+
+  </div>
+
+  <!-- Judge detail panels -->
+
+  <div id="detail-customer" class="judge-detail active">
+    <h3>👤 Customer Fit — {{ customer_score }}/100</h3>
+    <p class="feedback-text">{{ customer_feedback }}</p>
+    <ul class="checklist">
+      <li>
+        <span class="dot {% if customer_details.pain_points_addressed %}pass{% else %}fail{% endif %}">{% if customer_details.pain_points_addressed %}✓{% else %}✗{% endif %}</span>
+        Pain points addressed
+      </li>
+      <li>
+        <span class="dot {% if customer_details.clarity == 'excellent' or customer_details.clarity == 'good' %}pass{% else %}fail{% endif %}">{% if customer_details.clarity == 'excellent' or customer_details.clarity == 'good' %}✓{% else %}✗{% endif %}</span>
+        Clarity: <strong style="margin-left:4px">{{ customer_details.clarity }}</strong>
+      </li>
+      <li>
+        <span class="dot {% if customer_details.value_proposition == 'clear' %}pass{% else %}fail{% endif %}">{% if customer_details.value_proposition == 'clear' %}✓{% else %}✗{% endif %}</span>
+        Value proposition: <strong style="margin-left:4px">{{ customer_details.value_proposition }}</strong>
+      </li>
+    </ul>
+  </div>
+
+  <div id="detail-geo" class="judge-detail">
+    <h3>🤖 GEO / AI Engine Compliance — {{ geo_score }}/100</h3>
+    <p class="feedback-text">{{ geo_feedback }}</p>
+    <p style="font-size:13px;color:#888;margin-bottom:12px">Each signal = 20 points. Based on Princeton GEO research (+37-41% AI visibility).</p>
+    <ul class="checklist">
+      {% for key, val in geo_checks.items %}
+      <li>
+        <span class="dot {% if val %}pass{% else %}fail{% endif %}">{% if val %}✓{% else %}✗{% endif %}</span>
+        {{ key|title|cut:"Has "|cut:"_" }}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div id="detail-competitor" class="judge-detail">
+    <h3>⚔️ Competitor Edge — {{ competitor_score }}/100</h3>
+    <p class="feedback-text">{{ competitor_feedback }}</p>
+    <ul class="checklist">
+      <li>
+        <span class="dot {% if competitor_details.beats_on_specificity %}pass{% else %}fail{% endif %}">{% if competitor_details.beats_on_specificity %}✓{% else %}✗{% endif %}</span>
+        More specific and data-rich than competitors
+      </li>
+      <li>
+        <span class="dot {% if competitor_details.covers_gaps %}pass{% else %}fail{% endif %}">{% if competitor_details.covers_gaps %}✓{% else %}✗{% endif %}</span>
+        Covers gaps competitors miss
+      </li>
+      <li>
+        <span class="dot {% if competitor_details.unique_angle %}pass{% else %}fail{% endif %}">{% if competitor_details.unique_angle %}✓{% else %}✗{% endif %}</span>
+        Unique angle not used by competitors
+      </li>
+    </ul>
+  </div>
+
+  <div id="detail-naturalness" class="judge-detail">
+    <h3>✍️ Human Naturalness — {{ naturalness_score }}/100</h3>
+    <p class="feedback-text">{{ naturalness_feedback }}</p>
+    {% if ai_cliches %}
+    <p style="font-size:13px;font-weight:600;margin-bottom:8px;color:#e74c3c">AI cliches detected (-5pts each):</p>
+    <div style="margin-bottom:16px">
+      {% for w in ai_cliches %}<span class="tag red">{{ w }}</span>{% endfor %}
+    </div>
+    {% else %}
+    <p><span class="tag green">No AI cliches detected</span></p>
+    {% endif %}
+  </div>
+
+  <!-- Content -->
+  <div class="section-title" style="margin-top:8px">Generated Content</div>
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('en', this)">English</div>
+    <div class="tab" onclick="showTab('fi', this)">Finnish</div>
+  </div>
+
+  <div id="tab-en" class="tab-content active">
+    <div class="content-card">
+      <div class="lang-label">Website Page — English</div>
+      <h1>{{ content_en.headline }}</h1>
+      {{ content_en.sections_html|safe }}
+      <div class="cta">{{ content_en.cta }}</div>
+    </div>
+  </div>
+
+  <div id="tab-fi" class="tab-content">
+    <div class="content-card">
+      <div class="lang-label">Website Page — Finnish</div>
+      <h1>{{ content_fi.headline }}</h1>
+      {{ content_fi.sections_html|safe }}
+      <div class="cta">{{ content_fi.cta }}</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function showJudge(name, el) {
+    document.querySelectorAll('.judge-detail').forEach(d => d.classList.remove('active'));
+    document.querySelectorAll('.judge-card').forEach(c => c.classList.remove('active'));
+    document.getElementById('detail-' + name).classList.add('active');
+    el.classList.add('active');
+  }
+  function showTab(lang, el) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + lang).classList.add('active');
+    el.classList.add('active');
+  }
+  // activate first judge card on load
+  document.querySelector('.judge-card').classList.add('active');
+</script>
+
+</body>
+</html>
