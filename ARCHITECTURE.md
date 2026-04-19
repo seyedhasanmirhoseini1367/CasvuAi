@@ -289,13 +289,60 @@ casevuAI/
 
 ---
 
-## What Makes This Different from Generic AI Content Tools
+## Competitive Advantage
 
-| Feature | Generic tools | CasvuAI |
-|---------|--------------|---------|
-| Brand voice | Prompt-based guess | Learned from real client data via RAG |
-| SEO/GEO | Traditional keyword SEO | AI engine citation optimization |
-| Competitors | Not considered | Analyzed to find gaps and unique angles |
-| Quality | One-shot generation | Evaluated by 4 independent judges with retry loop |
-| Languages | Translation | Cultural localization using client's own content |
-| Content structure | Generic | WH-intent classified, matched to GEO template |
+### The Market Gap
+
+SMEs are losing search visibility as users shift from Google to AI engines (ChatGPT, Perplexity, Claude, Google AI Overview). Existing tools were built for the Google era — keyword density, backlinks, meta tags. None of them optimize for how AI engines decide what to cite.
+
+CasvuAI is built specifically for the AI-first era, targeting the SME segment that has no in-house marketing team and cannot afford an agency.
+
+---
+
+### How CasvuAI Compares
+
+| Capability | Generic AI tools | SEO platforms | Marketing agencies | **CasvuAI** |
+|---|---|---|---|---|
+| Brand voice | Prompt guess | None | Manual briefs | **Learned from client's real data via RAG** |
+| GEO / AI visibility | No | No | Rarely | **Princeton-backed signals (+37-41% AI citation)** |
+| Competitor intelligence | None | Keyword gaps only | Manual research | **Autonomous — top 5 inferred per query intent** |
+| Content structure | Generic template | Keyword-based | Human judgment | **Query intent classified → matched to GEO template** |
+| Quality control | One-shot | One-shot | Human review | **4-judge evaluation loop with automatic retry** |
+| Localization | Translation API | None | Extra cost | **Cultural adaptation using client's own language data** |
+| Cost | Subscription | Subscription | High retainer | **Runs entirely on free-tier APIs** |
+| Speed | Minutes | Minutes | Days/weeks | **Fully autonomous, single pipeline run** |
+
+---
+
+### Key Differentiators
+
+**1. GEO over SEO**
+The system is the first in this segment to explicitly optimize for AI engine citation rather than Google ranking. The 5 GEO signals (statistics, citations, expert quotes, definition blocks, unique data) are injected and verified by a deterministic judge — not left to chance.
+
+**2. Brand voice that is learned, not assumed**
+Every agent that touches content queries the client's own ChromaDB vector store. The brand voice is extracted from real past content — tone, values, audience, preferred style, forbidden words. Generic tools guess from a prompt. This system learns from evidence.
+
+**3. Autonomous competitive intelligence**
+Clients do not need to know who their competitors are or research their content. The system infers the top 5 most relevant competitors for the specific query intent, identifies what they claim, what they miss, and builds a differentiation strategy automatically.
+
+**4. Query intent drives structure**
+Before writing, the pipeline classifies the underlying query intent (WHAT / WHY / HOW / WHO / WHICH / WHEN / WHERE). Each intent maps to a different content structure and GEO priority signal. This is how AI engines organize knowledge — the content is built to match that structure from the start.
+
+**5. Quality loop, not one-shot**
+Three independent judges (customer fit, GEO compliance, human naturalness) evaluate every draft. If the overall score is below 70, specific feedback is fed back into the writer and the content is regenerated — up to 3 times. A fourth judge (competitor edge) evaluates the final result once. Most tools generate once and deliver.
+
+**6. Cultural localization, not translation**
+Finnish content is not translated from English — it is written using the client's own Finnish-language content as a style reference. Finnish business culture (directness, modesty, practical tone) is applied as a cultural brief, not just a language switch.
+
+**7. Zero marginal cost**
+The entire stack runs on free tiers: Groq (500k tokens/day), local sentence-transformers embeddings (no API), and local ChromaDB. An SME can run this pipeline repeatedly with no per-use cost — which is the only model that works for the target market.
+
+---
+
+### Who This Is For
+
+| Segment | Problem | How CasvuAI solves it |
+|---|---|---|
+| Finnish SMEs (10-100 employees) | No marketing team, losing AI visibility | Fully autonomous pipeline, no expertise required |
+| Marketing consultants | Too slow to produce multilingual GEO content manually | Pipeline handles brand extraction, writing, optimization, QA |
+| SaaS platforms serving SMEs | Need white-label content automation | Modular pipeline with per-client data isolation |
