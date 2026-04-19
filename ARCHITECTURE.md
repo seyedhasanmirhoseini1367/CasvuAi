@@ -309,7 +309,6 @@ CasvuAI is built specifically for the AI-first era, targeting the SME segment th
 | Content structure | Generic template | Keyword-based | Human judgment | **Query intent classified → matched to GEO template** |
 | Quality control | One-shot | One-shot | Human review | **4-judge evaluation loop with automatic retry** |
 | Localization | Translation API | None | Extra cost | **Cultural adaptation using client's own language data** |
-| Cost | Subscription | Subscription | High retainer | **Runs entirely on free-tier APIs** |
 | Speed | Minutes | Minutes | Days/weeks | **Fully autonomous, single pipeline run** |
 
 ---
