@@ -347,11 +347,21 @@ Finnish content is not translated from English — it is written using the clien
 The entire stack runs on free tiers: Groq (500k tokens/day), local sentence-transformers embeddings (no API), and local ChromaDB. An SME can run this pipeline repeatedly with no per-use cost — which is the only model that works for the target market.
 
 ---
+Each file in one line:
 
-### Who This Is For
-
-| Segment | Problem | How CasvuAI solves it |
-|---|---|---|
-| Finnish SMEs (10-100 employees) | No marketing team, losing AI visibility | Fully autonomous pipeline, no expertise required |
-| Marketing consultants | Too slow to produce multilingual GEO content manually | Pipeline handles brand extraction, writing, optimization, QA |
-| SaaS platforms serving SMEs | Need white-label content automation | Modular pipeline with per-client data isolation |
+File	What it does
+pipeline.py	Master orchestrator — runs all 6 phases in order
+models.py	Data shapes — defines what every object looks like (BrandProfile, ContentBrief, etc.)
+config.py	Settings — API keys, model names, quality thresholds
+agents/ingestion.py	Chunks client documents, embeds them locally, stores in ChromaDB
+agents/brand_analyzer.py	Queries the client's ChromaDB → extracts tone, values, audience, style
+agents/competitor_analyzer.py	Analyzes competitor content (or infers top 5) → finds gaps and unique angles
+agents/content_classifier.py	Detects the query intent behind the goal → selects content structure
+agents/content_writer.py	Builds the content brief, then writes the draft using RAG + brand voice
+agents/geo_optimizer.py	Injects GEO signals into the draft (statistics, citations, quotes, definitions)
+agents/evaluator.py	Runs 4 independent judges and scores the content
+agents/localizer.py	Culturally adapts the content into each target language
+agents/gemini_client.py	Shared LLM client — sends prompts to Groq, repairs malformed JSON
+demo.py	Runs the pipeline with hardcoded sample data — for quick testing
+run.py	CLI — loads real client data from files and runs the pipeline
+web/	Django demo interface — form input, loading screen, results page
