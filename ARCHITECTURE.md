@@ -120,11 +120,21 @@ CLIENT INPUT
 │  └───────────────────────────────────────────────────────┘  │
 │                                                             │
 │  POST-LOOP — COMPETITOR EDGE (Judge 3, runs once)           │
-│  ┌──────────────────────────────────────┐                   │
-│  │ Compares final content vs competitors│                   │
-│  │ More specific? Fills gaps? Unique    │                   │
-│  │ angle? (LLM judge)                   │                   │
-│  └──────────────────────────────────────┘                   │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ Runs AFTER the loop, not inside it.                  │   │
+│  │                                                      │   │
+│  │ Why outside the loop: Judges 1, 2, 4 measure         │   │
+│  │ writing quality — rewriting can improve them.        │   │
+│  │ Judge 3 compares content against competitors.        │   │
+│  │ Rewriting doesn't change what competitors say,       │   │
+│  │ so running it inside the loop adds no value.         │   │
+│  │                                                      │   │
+│  │ What it checks:                                      │   │
+│  │ • Is our content more specific and data-rich?        │   │
+│  │ • Does it cover gaps competitors miss?               │   │
+│  │ • Does it have a unique angle competitors don't use? │   │
+│  │ (LLM judge)                                          │   │
+│  └──────────────────────────────────────────────────────┘   │
 │                                                             │
 │  Final overall = avg(J1 + J2 + J3 + J4)                    │
 └──────────────────────────┬──────────────────────────────────┘
