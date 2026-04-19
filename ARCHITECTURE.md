@@ -95,7 +95,7 @@ CLIENT INPUT
 │  │           definition blocks · unique data            │  │
 │  │  Restructures for AI retrieval (clear H2s)           │  │
 │  │                          ↓                           │  │
-│  │  PHASE 5 — EVALUATION (judges 1, 2, 4)              │  │
+│  │  PHASE 5 — EVALUATION -Brand-aligned (judges 1, 2, 4)              │  │
 │  │                                                       │  │
 │  │  ┌────────────────┐  ┌────────────────┐              │  │
 │  │  │ Judge 1        │  │ Judge 2        │              │  │
